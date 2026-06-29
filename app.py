@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 
-SHEET_URL = "https://docs.google.com/spreadsheets/d/1FiSSkuSlJNGn1xV5TKbM79ffAnA3cyGgK08ZycTgNyU/export?format=csv"
+SHEET_URL = st.secrets["SHEET_URL"]
 
 @st.cache_data(ttl=60)
 def get_data():
