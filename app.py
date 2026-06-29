@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 
+# Secrets'tan güvenli link çekimi
 SHEET_URL = st.secrets["SHEET_URL"]
 
 @st.cache_data(ttl=60)
@@ -36,18 +37,28 @@ if plaka_input:
         simdiki_km = st.number_input("Aracınızın şu anki kilometresini girin:", min_value=giris_km, value=giris_km)
         
         if st.button("Bakım Durumunu Gör"):
-            # KM Hesabı
             kalan_km = (giris_km + 10000) - simdiki_km
-            
-            # Zaman Hesabı (365 gün sınırı)
             kalan_gun = 365 - fark_gun
             
-            # Sonuçları göster
+            # Müşteriye durumu net gösteren profesyonel mantık
             if kalan_km > 0 and kalan_gun > 0:
-                st.info(f"✅ Bakımınıza **{kalan_km} KM** ve **{kalan_gun} gün** var.")
+                st.info(f"✅ Aracınızın bakımı için her şey yolunda! **{kalan_km} KM** ve **{kalan_gun} gün** daha süreniz var.")
+            
+            elif kalan_km <= 0 and kalan_gun > 0:
+                st.error("⚠️ Bakım kilometre sınırınız dolmuştur!")
+                st.warning(f"• **KM Aşımı:** Limit aşılmış, {abs(kalan_km)} KM fazlanız var.")
+                st.info("📍 **Lütfen bakım için Zeynel Oto'ya uğrayın.**")
+            
+            elif kalan_km > 0 and kalan_gun <= 0:
+                st.error("⚠️ Yıllık bakım süreniz dolmuştur!")
+                st.warning(f"• **Zaman Aşımı:** Bakım süresi {abs(kalan_gun)} gün önce dolmuş.")
+                st.info("📍 **Lütfen bakım için Zeynel Oto'ya uğrayın.**")
+            
             else:
-                st.error("⚠️ Bakım süreniz dolmuş! Lütfen Zeynel Oto'ya uğrayın.")
-                if kalan_km <= 0: st.write(f"• KM sınırı geçildi: {abs(kalan_km)} KM fazla.")
-                if kalan_gun <= 0: st.write(f"• Yıllık bakım süresi doldu: {abs(kalan_gun)} gün geçti.")
+                st.error("⚠️ Hem bakım süreniz hem de kilometre sınırınız dolmuştur!")
+                st.warning(f"• **KM Aşımı:** {abs(kalan_km)} KM fazlanız var.")
+                st.warning(f"• **Zaman Aşımı:** Bakım süresi {abs(kalan_gun)} gün önce dolmuş.")
+                st.info("📍 **Lütfen bakım için Zeynel Oto'ya uğrayın.**")
+                
     else:
         st.error("❌ Plaka bulunamadı!")
