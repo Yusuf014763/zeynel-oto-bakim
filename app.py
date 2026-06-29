@@ -14,7 +14,7 @@ df = get_data()
 df.columns = df.columns.str.strip() 
 df['Plaka_Temiz'] = df['Plaka'].astype(str).str.replace(" ", "").str.upper()
 
-plaka_input = st.text_input("Plakanızı girin (Örn: 01ZS047)").upper().replace(" ", "")
+plaka_input = st.text_input("Plakanızı girin (Örn: 01ABC123)").upper().replace(" ", "")
 
 if plaka_input:
     car = df[df['Plaka_Temiz'] == plaka_input]
